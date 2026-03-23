@@ -1,0 +1,40 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: user
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: user
+    volumes:
+      - ./data_user:/docker-entrypoint-initdb.d:ro
+      - data_user:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - app-network
+
+  postgres2:
+    image: postgres:17
+    container_name: order
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: order
+    volumes:
+       - ./data_order:/docker-entrypoint-initdb.d:ro
+       - data_order:/var/lib/postgresql/data
+    ports:
+        - "5433:5432"
+    networks:
+        - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  data_user:
+  data_order:
