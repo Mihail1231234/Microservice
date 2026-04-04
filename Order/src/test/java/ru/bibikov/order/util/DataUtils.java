@@ -1,5 +1,6 @@
 package ru.bibikov.order.util;
 
+import ru.bibikov.order.dto.User;
 import ru.bibikov.order.entity.Order;
 
 public class DataUtils {
@@ -29,6 +30,20 @@ public class DataUtils {
                 .quantityOrder(1)
                 .orderName("Iphone")
                 .quantityHave(15)
+                .build();
+    }
+    public static User getUserTransient(){
+        return User.builder()
+                .name("John")
+                .email("john@gmail.com")
+                .build();
+    }
+
+    public static User getUserPersisted(){
+        return User.builder()
+                .id(1L)
+                .name("John")
+                .email("john@gmail.com")
                 .build();
     }
 }

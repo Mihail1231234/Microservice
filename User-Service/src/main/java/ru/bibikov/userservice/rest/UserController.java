@@ -18,27 +18,36 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<SaveResponse> getUserById(@PathVariable Long id){
-        log.info("get by id {}",id);
+    public ResponseEntity<SaveResponse> getUserById(@PathVariable Long id) {
+        log.info("get by id {}", id);
         return ResponseEntity.ok(userService.findById(id));
     }
+
     @GetMapping("/us/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id){
-        log.info("get by id {}",id);
-        return new ResponseEntity<>(userService.findUserById(id),HttpStatus.FOUND);
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
+        log.info("get by id {}", id);
+        Object result = userService.findUserById(id);
+        if (result instanceof User user) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else if (result instanceof SaveResponse rs) {
+            return new ResponseEntity<>(rs,HttpStatus.NOT_FOUND);
+        }return ResponseEntity.status(500).body("Unexpected error");
     }
+
     @PostMapping
     public ResponseEntity<SaveResponse> saveEntity(@RequestBody User user) throws IllegalAccessException {
         log.info("save {}", user);
         return ResponseEntity.ok(userService.save(user));
     }
+
     @PostMapping("/{id}/update")
-    public ResponseEntity<SaveResponse> updateUser(@RequestBody User user, @PathVariable Long id){
-        log.info("Update user {}",user);
-        return ResponseEntity.ok(userService.updateUser(user,id));
+    public ResponseEntity<SaveResponse> updateUser(@RequestBody User user, @PathVariable Long id) {
+        log.info("Update user {}", user);
+        return ResponseEntity.ok(userService.updateUser(user, id));
     }
+
     @PostMapping("/{id}/delete")
-    public ResponseEntity<SaveResponse> deleteUser(@PathVariable Long id){
+    public ResponseEntity<SaveResponse> deleteUser(@PathVariable Long id) {
         log.info("Delete user by id {}", id);
         return ResponseEntity.ok(userService.deleteUser(id));
     }

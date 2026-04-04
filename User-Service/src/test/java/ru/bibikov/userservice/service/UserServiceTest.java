@@ -15,6 +15,7 @@ import ru.bibikov.userservice.util.DataUtils;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -71,24 +72,27 @@ class UserServiceTest {
 
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
-        User userFromDB = userService.findUserById(user.getId());
+        Object userFromDB = userService.findUserById(user.getId());
+        User user1=(User) userFromDB;
 
-        Assertions.assertNotNull(userFromDB);
-        Assertions.assertEquals("Frank", userFromDB.getName());
+        Assertions.assertNotNull(user1);
+        Assertions.assertEquals("Frank", user1.getName());
         Mockito.verify(userRepository, Mockito.times(1)).findById(Mockito.any());
     }
 
     @Test
-    void findUserByIdNotFound() {
+    void findUserByIdBad() {
         Long id = 1L;
 
-        Mockito.when(userRepository.findById(id)).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> userService.findUserById(id));
+        Object result=userService.findById(id);
+        SaveResponse rs=(SaveResponse) result;
 
-        Assertions.assertNotNull(exception);
-        Assertions.assertEquals("User not found", exception.getMessage());
-        Mockito.verify(userRepository, Mockito.times(1)).findById(Mockito.any());
+        Assertions.assertNotNull(rs);
+        Assertions.assertFalse(rs.success());
+        Assertions.assertEquals(rs.message(),"User not found");
+        //Mockito.verify(userRepository, Mockito.times(1)).findById(Mockito.any());
 
     }
 

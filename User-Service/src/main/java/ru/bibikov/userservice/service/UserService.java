@@ -9,6 +9,8 @@ import ru.bibikov.userservice.entity.User;
 import ru.bibikov.userservice.exception.UserNotFoundException;
 import ru.bibikov.userservice.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -32,13 +34,17 @@ public class UserService {
             userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
             return new SaveResponse(true, "ok");
         } catch (UserNotFoundException e) {
-            return new SaveResponse(false, "bad " + e);
+            return new SaveResponse(false, "User not found");
         }
     }
 
-    public User findUserById(Long id) {
+    public Object findUserById(Long id) {
         validateId(id);
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        try {
+            return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        } catch (UserNotFoundException e){
+            return new SaveResponse(false,"User not found");
+        }
     }
 
     public SaveResponse updateUser(User newUser, Long id) {
@@ -56,8 +62,8 @@ public class UserService {
 
     public SaveResponse deleteUser(Long id) {
         validateId(id);
-        if (!userRepository.existsById(id)){
-            return new SaveResponse(false,"User not found");
+        if (!userRepository.existsById(id)) {
+            return new SaveResponse(false, "User not found");
         }
         userRepository.deleteById(id);
         return new SaveResponse(true, "User has been deleted");

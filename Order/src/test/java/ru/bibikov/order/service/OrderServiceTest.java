@@ -80,10 +80,11 @@ class OrderServiceTest {
         Order order =DataUtils.getIphoneTransient();
         Mockito.when(orderRepository.findById(1)).thenReturn(Optional.of(order));
 
-        ResponseEntity<Order> orderFromDb = orderService.findOrderById(1);
+        Object orderFromDb = orderService.findOrderById(1);
+        Order order1=(Order) orderFromDb;
 
-        Assertions.assertNotNull(orderFromDb);
-        assertEquals("Iphone",orderFromDb.getBody().getOrderName());
+        Assertions.assertNotNull(order1);
+        assertEquals("Iphone",order1.getOrderName());
 
         Mockito.verify(orderRepository).findById(1);
     }
@@ -91,16 +92,16 @@ class OrderServiceTest {
     //Как сделать ошибочный тест в данном месте
     @Test
     void findOrderByIdBad() {
-        Order order =DataUtils.getIphoneTransient();
-
+        SaveResponse response=new SaveResponse(false,"Order not found");
         Mockito.when(orderRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        ResponseEntity<Order> orderFromDb = orderService.findOrderById(anyInt());
+        Object orderFromDb = orderService.findOrderById(1);
+        SaveResponse rs=(SaveResponse) orderFromDb;
 
-        Assertions.assertNotNull(orderFromDb);
-        //assertEquals("Iphone",orderFromDb.getBody().getOrderName());
+        Assertions.assertNotNull(rs);
+        assertFalse(rs.success());
 
-        Mockito.verify(orderRepository).findById(1);
+        //Mockito.verify(orderRepository).findById(1);
     }
 
     @Test

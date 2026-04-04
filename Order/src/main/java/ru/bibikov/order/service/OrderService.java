@@ -42,11 +42,16 @@ public class OrderService {
         }
     }
 
-    public ResponseEntity<Order> findOrderById(Integer id) {
-        validateId(id);
-        Optional<Order> order = orderRepository.findById(id);
-        validateOrderIsNull(order);
-        return new ResponseEntity<>(order.get(), HttpStatus.FOUND);
+    public Object findOrderById(Integer id) {
+        try{
+            validateId(id);
+            Optional<Order> order = orderRepository.findById(id);
+            validateOrderIsNull(order);
+            return order.get();
+        }catch (RuntimeException e){
+            SaveResponse rs=new SaveResponse(false,"Order not found");
+            return rs;
+        }
     }
 
 

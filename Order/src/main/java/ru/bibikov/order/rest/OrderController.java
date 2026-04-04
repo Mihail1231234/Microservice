@@ -9,6 +9,8 @@ import ru.bibikov.order.dto.User;
 import ru.bibikov.order.entity.Order;
 import ru.bibikov.order.service.OrderService;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/orders")
@@ -28,9 +30,15 @@ public class OrderController {
         return ResponseEntity.ok(service.saveOrder(order));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrder(@PathVariable Integer id){
+    public ResponseEntity<?> getOrder(@PathVariable Integer id){
         log.info("get order by id {}",id);
-        return ResponseEntity.ok(service.findOrderById(id).getBody());
+        Object result = service.findOrderById(id);
+        if (result instanceof Order order){
+            return ResponseEntity.ok(order);
+        }else if (result instanceof SaveResponse response){
+            return ResponseEntity.status(404).body(response);
+        }
+        return ResponseEntity.status(500).body("Unexpected error");
     }
     @PostMapping("/{id}/update")
     public ResponseEntity<SaveResponse> updateOrder(@RequestBody Order newOrder, @PathVariable Integer id){
