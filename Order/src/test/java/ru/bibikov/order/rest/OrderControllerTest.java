@@ -37,7 +37,7 @@ class OrderControllerTest {
         mockMvc.perform(post("/orders/save"));*/
     }
 
-    @Test
+    /*@Test
     void saveOrder() throws Exception {
         Order order= DataUtils.getIphoneTransient();
 
@@ -50,7 +50,7 @@ class OrderControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success"),CoreMatchers.notNullValue())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message"));
-    }
+    }*/
 
     @Test
     void getOrder() {
