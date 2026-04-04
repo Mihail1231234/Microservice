@@ -2,6 +2,8 @@ package ru.bibikov.order.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -48,10 +50,10 @@ class OrderControllerTest {
         result
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.success"),CoreMatchers.notNullValue())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message"));
-    }*/
-
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.success").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString());
+    }
+*/
     @Test
     void getOrder() {
     }
