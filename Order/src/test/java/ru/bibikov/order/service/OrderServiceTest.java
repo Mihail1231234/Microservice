@@ -92,7 +92,6 @@ class OrderServiceTest {
     //Как сделать ошибочный тест в данном месте
     @Test
     void findOrderByIdBad() {
-        SaveResponse response=new SaveResponse(false,"Order not found");
         Mockito.when(orderRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         Object orderFromDb = orderService.findOrderById(1);
@@ -101,7 +100,7 @@ class OrderServiceTest {
         Assertions.assertNotNull(rs);
         assertFalse(rs.success());
 
-        //Mockito.verify(orderRepository).findById(1);
+
     }
 
     @Test

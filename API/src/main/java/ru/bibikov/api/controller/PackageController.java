@@ -2,6 +2,7 @@ package ru.bibikov.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.bibikov.api.dto.Order;
@@ -23,9 +24,14 @@ public class PackageController {
         return ResponseEntity.ok(clientService.sendUser(user));
     }
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id){
+    public ResponseEntity<Object> getUser(@PathVariable Long id){
         log.info("Get user by id {}", id);
-        return ResponseEntity.ok(clientService.getUserById(id));
+        Object obj=clientService.getUserById(id);
+        if (obj instanceof User user){
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else if (obj instanceof SaveResponse rs) {
+            return new ResponseEntity<>(rs,HttpStatus.OK);
+        }return ResponseEntity.status(500).body("Unexpected error");
     }
     @PostMapping("/user/{id}/update")
     public ResponseEntity<SaveResponse> updateUser(@RequestBody User user, @PathVariable Long id){
@@ -50,9 +56,14 @@ public class PackageController {
         return ResponseEntity.ok(clientService.saveOrder(order));
     }
     @GetMapping("/order/{id}")
-    public ResponseEntity<Order> getOrder(@PathVariable Integer id){
+    public ResponseEntity<Object> getOrder(@PathVariable Integer id){
         log.info("Get order by id {}",id);
-        return ResponseEntity.ok(clientService.getOrderById(id));
+        Object obj=clientService.getOrderById(id);
+        if (obj instanceof Order order){
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        } else if (obj instanceof SaveResponse rs) {
+            return new ResponseEntity<>(rs,HttpStatus.OK);
+        }return ResponseEntity.status(500).body("Unexpected error");
     }
     @PostMapping("/order/{id}/update")
     public ResponseEntity<SaveResponse> updateOrder(@RequestBody Order newOrder,@PathVariable Integer id){

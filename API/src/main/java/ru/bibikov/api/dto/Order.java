@@ -6,7 +6,7 @@ import lombok.Builder;
 @Builder
 public record Order (
     Integer id,
-    Integer userId,
+    Long userId,
     Integer unitPrice,
     Integer quantityOrder,
     String orderName,

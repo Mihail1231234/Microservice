@@ -28,8 +28,8 @@ public class ClientService {
         return response.getBody();
     }
 
-    public User getUserById(Long id) {
-        ResponseEntity<User> response=restTemplate.getForEntity(urlUser+"/us/"+id, User.class);
+    public Object getUserById(Long id) {
+        ResponseEntity<Object> response=restTemplate.getForEntity(urlUser+"/us/"+id, Object.class);
         return response.getBody();
     }
 
@@ -46,8 +46,10 @@ public class ClientService {
 
 
     public SaveResponse sendUserToOrder(User user, Integer id){
-        ResponseEntity<User> responseUser=restTemplate.getForEntity(urlUser+"/"+user.id(), User.class);
-        if (responseUser==null) throw new RuntimeException("User not found");
+        ResponseEntity<SaveResponse> responseUser=restTemplate.getForEntity(urlUser+"/us/"+user.id(), SaveResponse.class);
+        if (!responseUser.getBody().success()){
+            return new SaveResponse(false,"User not found");
+        }
         ResponseEntity<SaveResponse> response=restTemplate.postForEntity(urlOrder+"/order-userId/"+id,user,SaveResponse.class);
         return response.getBody();
     }
@@ -58,8 +60,8 @@ public class ClientService {
         return responseOrder.getBody();
     }
 
-    public Order getOrderById(Integer id) {
-        ResponseEntity<Order> response=restTemplate.getForEntity(urlOrder+"/"+id, Order.class);
+    public Object getOrderById(Integer id) {
+        ResponseEntity<Object> response=restTemplate.getForEntity(urlOrder+"/"+id, Object.class);
         return response.getBody();
     }
 
